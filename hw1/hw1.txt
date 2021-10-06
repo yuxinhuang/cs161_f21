@@ -1,4 +1,4 @@
-1.Below is the result of first 11 numbers of the sequence into the function:
+1.Below is the result of first 11 values of N into the SEQ function:
 
 [1]> (load "hw1.lsp")
 ;; Loading file hw1.lsp ...
@@ -31,3 +31,53 @@ When I ran a larger N, (i.e. N=50 here):
 [13]> (SEQ 50) 
 
 The execution time of the function exceeds hence clisp fails to resonse.This is because the function is calling three recursion functions using n-1, n-2, and n-3 as input parameters.Since there is no memorizaiton, SEQ funciton recomputes functions constantly. 
+
+2. Below is the first 11 values of N into the SUMS function. 
+
+[1]> (load "hw1.lsp")
+;; Loading file hw1.lsp ...
+;; Loaded file hw1.lsp
+T
+[2]> (SUMS 0)
+0
+[3]> (SUMS 1)
+0
+[4]> (SUMS 2)
+0
+[5]> (SUMS 3)
+2
+[6]> (SUMS 4)
+4
+[7]> (SUMS 5)
+8
+[8]> (SUMS 6)
+16
+[9]> (SUMS 7)
+30
+[10]> (SUMS 8)
+56
+[11]> (SUMS 9)
+104
+[12]> (SUMS 10)
+192
+
+3.The result of testing:
+
+[1]> (load "hw1.lsp")
+;; Loading file hw1.lsp ...
+;; Loaded file hw1.lsp
+T
+[2]> (ANON 'foo)
+0
+[3]> (ANON '42)
+0
+[4]> (ANON '(((L E)F)T))
+(((0 0) 0) 0)
+[5]> (ANON '(5 FOO 3.1 -0.2))
+(0 0 0 0)
+[6]> (ANON '(1 (FOO 3.1) -0.2))
+(0 (0 0) 0)
+[7]> (ANON '(((1 2) (FOO 3.1))(BAR -0.2)))
+(((0 0) (0 0)) (0 0))
+[8]> (ANON '(R(I(G(H T)))))
+(0 (0 (0 (0 0))))
