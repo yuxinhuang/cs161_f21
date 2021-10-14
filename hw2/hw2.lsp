@@ -12,7 +12,7 @@
 		;empty
 		(null FRINGE nil)
 		((atom (cdr FRINGE)) (cons (cdr FRINGE) (DFS (car FRINGE))))
-		(t (DFS (append (cdr FRINGE) (car FRINGE))))	
+		(t (DFS (append (car FRINGE) (cdr FRINGE))))	
 
 	)
   )
