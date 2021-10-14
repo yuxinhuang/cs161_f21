@@ -9,11 +9,22 @@
 ; TODO: comment code
 (defun DFSRL (FRINGE)
 	(cond
-		;empty
-		(null FRINGE nil)
-		((atom (cdr FRINGE)) (cons (cdr FRINGE) (DFS (car FRINGE))))
-		(t (DFS (append (car FRINGE) (cdr FRINGE))))	
-
+                ((null FRINGE) nil)
+		((atom (car FRINGE)) 
+                (if (null (cdr FRINGE))
+                (list(car FRINGE))
+                (cons(DFSRL(cdr FRINGE)) (car FRINGE))
+                )
+                )
+		(t
+                (cond 
+                ((null (car FRINGE)) (DFSRL(cdr FRINGE)))
+                ((null (cdr FRINGE)) (DFSRL(car FRINGE))) 
+                (t (DFSRL(append (car FRINGE) (cdr FRINGE))))	
+                )
+                )    
+                
+                
 	)
   )
 
@@ -45,6 +56,7 @@
 
 ; FINAL-STATE takes a single argument S, the current state, and returns T if it
 ; is the goal state (T T T T) and NIL otherwise.
+#|
 (defun FINAL-STATE (S)
     ...)
 
@@ -97,4 +109,4 @@
 ; search path.
 (defun DFS (S PATH)
     ...)
-    
+|#  
