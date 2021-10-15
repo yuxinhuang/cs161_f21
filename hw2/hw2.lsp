@@ -184,17 +184,17 @@
 ; ensuring that the depth-first search does not revisit a node already on the
 ; search path.
 (defun DFS (S PATH)
-    (let ((goal (append PATH (list S))) (next (SUCC-FN S)))
-        (cond
-            ;if the node is visited
-            ((ON-PATH S PATH) nil)
-            ;reach the goal
-            ((FINAL-STATE S) goal)
-            ;else generate the next state from the current state, and do MULT-DFS to reach the goal
-            (t (MULT-DFS next goal))
+   
+    (cond
+        ;if the node is visited
+        ((ON-PATH S PATH) nil)
+        ;reach the goal
+        ((FINAL-STATE S) (append PATH (list S)))
+        ;else generate the next state from the current state, and do MULT-DFS to reach the goal
+        (t (MULT-DFS (SUCC-FN S) (append PATH (list S))))
 
-        )
     )
+    
 
 )
 
