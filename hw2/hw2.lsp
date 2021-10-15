@@ -143,9 +143,9 @@
         (cond
             ;curr is not in STATES
             ((null STATES) nil)
-            ;curr is in STATES, return T
+            ;curr is the current state, return T
             ((equal S curr) T)
-            ;check the remaining states recursively
+            ;check the remaining stack states recursively
             (t (ON-PATH S next))
 
         )
@@ -163,11 +163,11 @@
 ; complete path from the initial state to the goal state. Otherwise, it returns
 ; NIL.
 (defun MULT-DFS (STATES PATH)
-    (let ((curr (car STATES)) (other (cdr STATES)))
+    (let ((curr (car STATES)) (next (cdr STATES)))
         (cond
             ((null STATES) nil)
             ;from curr to goal. If no path exists, try another states at the current level
-            ((null (DFS curr PATH)) (MULT-DFS other PATH))
+            ((null (DFS curr PATH)) (MULT-DFS next PATH))
             ; there is a path
             (t (DFS curr PATH))
         )
@@ -184,14 +184,14 @@
 ; ensuring that the depth-first search does not revisit a node already on the
 ; search path.
 (defun DFS (S PATH)
-    (let ((new (append PATH (list S))) (next (SUCC-FN S)))
+    (let ((goal (append PATH (list S))) (next (SUCC-FN S)))
         (cond
             ;if the node is visited
             ((ON-PATH S PATH) nil)
             ;reach the goal
-            ((FINAL-STATE S) new)
+            ((FINAL-STATE S) goal)
             ;else generate the next state from the current state, and do MULT-DFS to reach the goal
-            (t (MULT-DFS next new))
+            (t (MULT-DFS next goal))
 
         )
     )
