@@ -6,20 +6,33 @@
 ; Question 1 ;
 ;;;;;;;;;;;;;;
 
-; TODO: comment code
+;Write a single LISP function, called DFSRL. It takes a single argument FRINGE that represents a list
+;of search trees, and returns a top-level list of leaf nodes, in the order they are visited by right-to-left
+;depth first search. The initial call to DFSRL passes a FRINGE list with a single element: the root of the
+;search tree.
 (defun DFSRL (FRINGE)
 	(cond
-                ((null FRINGE) nil)
+        ; empty
+        ((null FRINGE) nil)
+        ; if the current node is a leaf, then move it to the back of the list. 
+        ;Process the rest of the list recursively first.
 		((atom (car FRINGE)) 
+                ;if there is only one node
                 (if (null (cdr FRINGE))
+                ; return the leaf
                 (list(car FRINGE))
+                ;else 
                 (cons(DFSRL(cdr FRINGE)) (car FRINGE))
                 )
                 )
+        ;else if the current node is a list, then unwrap the list 
 		(t
                 (cond 
+                ;if the current list is empty, process the rest of the list recursively
                 ((null (car FRINGE)) (DFSRL(cdr FRINGE)))
+                ;if the rest of the list is empty, process the current list recursively
                 ((null (cdr FRINGE)) (DFSRL(car FRINGE))) 
+                ;else unwrap them
                 (t (DFSRL(append (car FRINGE) (cdr FRINGE))))	
                 )
                 )    
@@ -56,9 +69,13 @@
 
 ; FINAL-STATE takes a single argument S, the current state, and returns T if it
 ; is the goal state (T T T T) and NIL otherwise.
-#|
+
 (defun FINAL-STATE (S)
-    ...)
+    (cond
+        ((equal S '(T T T T)) T)
+        (t nil)
+    )
+)
 
 ; NEXT-STATE returns the state that results from applying an operator to the
 ; current state. It takes three arguments: the current state (S), and which entity
@@ -71,21 +88,84 @@
 ; NOTE that next-state returns a list containing the successor state (which is
 ; itself a list); the return should look something like ((NIL NIL T T)).
 (defun NEXT-STATE (S A)
-    ...)
+(let ((homer (first S)) (baby (second S)) (dog (third S)) (poison (fourth S)))
+    (cond
+        ;homer
+        ((equal A 'h)
+            (cond
+                ;invalid state: baby with either dog or poison, and homer and baby at the same side
+                ((and (equal homer baby) (or (equal baby dog) (equal baby poison))) nil)
+                ;else next state
+                (t (list (cons (not homer) (cdr S))))
+            )
+        )
+        ;homer and baby
+        ((equal A 'b)
+            (cond
+                ;invalid state: homer is not at the same side with the baby
+                ((not (equal homer baby)) nil)
+                ;else next state
+                (t (list (list (not homer) (not baby) dog poison)))
+
+
+            )
+        )
+        ;homer and dog
+        ((equal A 'd) 
+            (cond
+                ;invalid state: homer is not at the same side with the dog
+                ((not (equal homer dog)) nil)
+                ;invalid state: left baby alone with the poison
+                ((equal baby poison) nil)
+                ;else next state
+                (t (list (list (not homer) baby (not dog) poison)))
+            )
+
+        )
+        ;homer and poison
+        ((equal A 'p)
+            (cond
+                ;invalid state: homer is not at the same side with the poison
+                ((not (equal homer poison)) nil)
+                ;invalid state: left baby alone with the dog
+                ((equal baby dog) nil)
+                ;else next state
+                (t (list (list (not homer) baby dog (not poison))))
+
+            )
+        )
+        (t nil)
+    )
+)
+
+)
 
 ; SUCC-FN returns all of the possible legal successor states to the current
 ; state. It takes a single argument (s), which encodes the current state, and
 ; returns a list of each state that can be reached by applying legal operators
 ; to the current state.
 (defun SUCC-FN (S)
-    ...)
+    (append (NEXT-STATE S 'h) (NEXT-STATE S 'b) (NEXT-STATE S 'd) (NEXT-STATE S 'p))
+)
 
 ; ON-PATH checks whether the current state is on the stack of states visited by
 ; this depth-first search. It takes two arguments: the current state (S) and the
 ; stack of states visited by DFS (STATES). It returns T if s is a member of
 ; states and NIL otherwise.
 (defun ON-PATH (S STATES)
-    ...)
+    (let ((curr (car STATES)) (next (cdr STATES)))
+        (cond
+            ;curr is not in STATES
+            ((null STATES) nil)
+            ;curr is in STATES, return T
+            ((equal S curr) T)
+            ;check the remaining states recursively
+            (t (ON-PATH S next))
+
+        )
+    )
+
+)
 
 ; MULT-DFS is a helper function for DFS. It takes two arguments: a list of
 ; states from the initial state to the current state (PATH), and the legal
@@ -97,7 +177,17 @@
 ; complete path from the initial state to the goal state. Otherwise, it returns
 ; NIL.
 (defun MULT-DFS (STATES PATH)
-    ...)
+    (let ((curr (car STATES)) (other (cdr STATES)))
+        (cond
+            ((null STATES) nil)
+            ;from curr to goal. If no path exists, try another states at the current level
+            ((null (DFS curr PATH)) (MULT-DFS other PATH))
+            ; there is a path
+            (t (DFS curr PATH))
+        )
+    )
+
+)
 
 ; DFS does a depth first search from a given state to the goal state. It
 ; takes two arguments: a state (S) and the path from the initial state to S
@@ -108,5 +198,17 @@
 ; ensuring that the depth-first search does not revisit a node already on the
 ; search path.
 (defun DFS (S PATH)
-    ...)
-|#  
+    (let ((new (append PATH (list S))) (next (SUCC-FN S)))
+        (cond
+            ;if the node is visited
+            ((ON-PATH S PATH) nil)
+            ;reach the goal
+            ((FINAL-STATE S) new)
+            ;else generate the next state from the current state, and do MULT-DFS to reach the goal
+            (t (MULT-DFS next new))
+
+        )
+    )
+
+)
+
