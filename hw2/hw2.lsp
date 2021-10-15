@@ -14,28 +14,14 @@
 	(cond
         ; empty
         ((null FRINGE) nil)
-        ; if the current node is a leaf, then move it to the back of the list. 
-        ;Process the rest of the list recursively first.
-		((atom (car FRINGE)) 
-                ;if there is only one node
-                (if (null (cdr FRINGE))
-                ; return the leaf
-                (list(car FRINGE))
-                ;else 
-                (cons(DFSRL(cdr FRINGE)) (car FRINGE))
-                )
-                )
-        ;else if the current node is a list, then unwrap the list 
+        ; if there is only one element, turn it into a list
+		((atom FRINGE) 
+            (cons FRINGE nil)
+        )
+        ;else if the current node is a list, then unwrap the list from right to left recursively
 		(t
-                (cond 
-                ;if the current list is empty, process the rest of the list recursively
-                ((null (car FRINGE)) (DFSRL(cdr FRINGE)))
-                ;if the rest of the list is empty, process the current list recursively
-                ((null (cdr FRINGE)) (DFSRL(car FRINGE))) 
-                ;else unwrap them
-                (t (DFSRL(append (car FRINGE) (cdr FRINGE))))	
-                )
-                )    
+            (append (DFSRL (cdr FRINGE)) (DFSRL (car FRINGE)))    
+        )    
                 
                 
 	)
