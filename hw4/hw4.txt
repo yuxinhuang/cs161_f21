@@ -1,0 +1,19 @@
+Graph1 with 3 colors is unsatisfiable.
+Graph1 with 4 colors is satisfiable.
+
+The answers of these two SAT instances tell us that we should have at least 4 colors to satifiy this SAT coloring problem, which is the maximum degree of the graph.
+
+One possible solution:
+Color set: {Red, Blue, Green, Yellow}
+Node set: {1,2,3,4,5,6,7}
+Solution:
+1 : Red
+2 : Blue
+3 : Green
+4 : Blue
+5 : Yellow
+6 : Green
+7 : Yellow
+
+
+The minimum number of colors required to properly color Graph2 is 8.
